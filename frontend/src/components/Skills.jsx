@@ -6,27 +6,40 @@ const SkillBar = ({ skill, index, isVisible }) => {
 
   useEffect(() => {
     if (isVisible) {
-      const t = setTimeout(() => setAnimatedLevel(skill.level), index * 100);
+      const t = setTimeout(() => setAnimatedLevel(skill.level), index * 90);
       return () => clearTimeout(t);
     }
   }, [isVisible, skill.level, index]);
 
   return (
-    <div className="group mb-6">
+    <div
+      className="group mb-6 will-change-transform"
+      style={{ animationDelay: `${index * 70}ms` }}
+    >
       <div className="flex justify-between items-center mb-2">
         <span className="text-white font-medium group-hover:text-emerald-400 transition-colors">
           {skill.name}
         </span>
         <span className="text-emerald-400 text-sm font-mono">{animatedLevel}%</span>
       </div>
+
       <div className="relative h-2 bg-slate-800/60 rounded-full overflow-hidden">
+        {/* Barra de progreso */}
         <div
-          className="absolute top-0 left-0 h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full transition-all duration-1000 ease-out"
+          className="absolute top-0 left-0 h-full rounded-full transition-all duration-1000 ease-out bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-300"
           style={{ width: `${animatedLevel}%` }}
         >
-          <div className="absolute right-0 top-0 h-full w-1 bg-emerald-300 opacity-75 animate-pulse"></div>
+          {/* “Spark” al frente */}
+          <div className="absolute -right-0.5 top-0 h-full w-1.5 bg-emerald-100/80 opacity-90 rounded-full shadow-[0_0_8px_rgba(110,231,183,0.8)] animate-pulse" />
         </div>
-        <div className="absolute right-2 top-1/2 -translate-y-1/2 w-1 h-1 border border-emerald-300/50 rotate-45 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+        {/* Brillo sutil en hover */}
+        <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-300/10 to-transparent" />
+        </div>
+
+        {/* Geometría sutil en hover */}
+        <div className="absolute right-2 top-1/2 -translate-y-1/2 w-1 h-1 border border-emerald-300/50 rotate-45 opacity-0 group-hover:opacity-100 transition-opacity" />
       </div>
     </div>
   );
@@ -35,30 +48,38 @@ const SkillBar = ({ skill, index, isVisible }) => {
 const SkillCategory = ({ title, skills, icon: Icon, isVisible, delay = 0 }) => {
   return (
     <div
-      className={`bg-slate-900/30 backdrop-blur-sm p-6 sm:p-8 rounded-xl border border-slate-800/50 hover:border-emerald-400/30 transition-all duration-500 ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-      }`}
+      className={[
+        'group relative rounded-xl border transition-all duration-700 will-change-transform',
+        'bg-slate-900/30 backdrop-blur-sm border-slate-800/50',
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8',
+        // efecto pro: glow de borde y lift
+        'hover:-translate-y-1 hover:shadow-2xl hover:shadow-emerald-500/10 hover:border-emerald-400/40',
+      ].join(' ')}
       style={{ transitionDelay: `${delay}ms` }}
     >
-      <div className="flex items-center mb-6">
-        <div className="p-3 bg-emerald-600/20 rounded-lg mr-4">
-          <Icon className="w-6 h-6 text-emerald-400" />
-        </div>
-        <h3 className="text-lg sm:text-xl font-semibold text-white">{title}</h3>
-        <div className="ml-auto w-4 h-4 border border-emerald-400/30 rotate-45 opacity-50"></div>
-      </div>
+      {/* borde glow con pseudo overlay */}
+      <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-transparent group-hover:ring-emerald-400/20 transition-[ring] duration-500" />
 
-      <div className="space-y-4">
-        {skills.map((skill, i) => (
-          <SkillBar key={skill.name ?? i} skill={skill} index={i} isVisible={isVisible} />
-        ))}
+      <div className="p-8">
+        <div className="flex items-center mb-6">
+          <div className="p-3 bg-emerald-600/20 rounded-lg mr-4 group-hover:bg-emerald-600/30 transition-colors">
+            <Icon className="w-6 h-6 text-emerald-400 group-hover:scale-110 transition-transform" />
+          </div>
+          <h3 className="text-xl font-semibold text-white">{title}</h3>
+          <div className="ml-auto w-4 h-4 border border-emerald-400/30 rotate-45 opacity-50" />
+        </div>
+
+        <div className="space-y-4">
+          {skills.map((skill, i) => (
+            <SkillBar key={skill.name ?? i} skill={skill} index={i} isVisible={isVisible} />
+          ))}
+        </div>
       </div>
     </div>
   );
 };
 
 export const Skills = ({ skills = {} }) => {
-  // defaults para evitar que "no se vea" si falta data en mobile
   const {
     languages = [],
     frameworks = [],
@@ -69,10 +90,16 @@ export const Skills = ({ skills = {} }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    // Respeta usuarios con reduce motion
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) {
+      setIsVisible(true);
+      return;
+    }
+
     const el = document.getElementById('skills');
     if (!el) return;
 
-    // Observer más permisivo para móviles
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -87,12 +114,10 @@ export const Skills = ({ skills = {} }) => {
     );
 
     obs.observe(el);
-
-    // Fallback: si por alguna razón no dispara en ciertos navegadores móviles
     const backup = setTimeout(() => setIsVisible(true), 1200);
 
     return () => {
-      obs.disconnect();
+      obs.disconnect?.();
       clearTimeout(backup);
     };
   }, []);
@@ -107,21 +132,25 @@ export const Skills = ({ skills = {} }) => {
   return (
     <section
       id="skills"
-      className="relative z-10 py-16 sm:py-20 bg-gradient-to-b from-slate-950 to-slate-900 scroll-mt-24"
+      aria-label="Technical Skills"
+      className="relative z-10 py-20 bg-gradient-to-b from-slate-950 to-slate-900 scroll-mt-24"
     >
-      <div className="container mx-auto px-4 sm:px-6">
+      {/* fondo decorativo suave + seguro en mobile */}
+      <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(50%_50%_at_50%_0%,rgba(16,185,129,0.06)_0%,rgba(15,23,42,0)_60%)]" />
+
+      <div className="container relative z-10 mx-auto px-6">
         {/* Header */}
-        <div className="text-center mb-10 sm:mb-16">
-          <h2 className="text-3xl sm:text-5xl font-light text-white mb-3 sm:mb-4">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-light text-white mb-4">
             Technical Skills
           </h2>
-          <p className="text-slate-400 max-w-2xl mx-auto text-base sm:text-xl">
+          <p className="text-xl text-slate-400 max-w-2xl mx-auto">
             Technologies and tools I use to bring ideas to life
           </p>
         </div>
 
-        {/* Grid responsive */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+        {/* Grid responsive con stagger */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {skillCategories.map((cat, i) =>
             cat.skills.length ? (
               <SkillCategory
@@ -130,7 +159,7 @@ export const Skills = ({ skills = {} }) => {
                 skills={cat.skills}
                 icon={cat.icon}
                 isVisible={isVisible}
-                delay={i * 200}
+                delay={i * 180}
               />
             ) : null
           )}
@@ -138,21 +167,24 @@ export const Skills = ({ skills = {} }) => {
 
         {/* Callout */}
         <div
-          className={`mt-12 sm:mt-16 text-center bg-slate-900/50 backdrop-blur-sm p-6 sm:p-8 rounded-xl border border-emerald-400/30 transition-all duration-700 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
-          style={{ transitionDelay: '800ms' }}
+          className={[
+            'mt-16 text-center rounded-xl border bg-slate-900/50 backdrop-blur-sm',
+            'border-emerald-400/30 transition-all duration-700 will-change-transform',
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8',
+            'hover:shadow-2xl hover:shadow-emerald-500/10 hover:-translate-y-1',
+          ].join(' ')}
+          style={{ transitionDelay: '720ms' }}
         >
-          <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-emerald-600/20 rounded-full mb-4">
-            <Zap className="w-7 h-7 sm:w-8 sm:h-8 text-emerald-400" />
+          <div className="p-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-600/20 rounded-full mb-4">
+              <Zap className="w-8 h-8 text-emerald-400" />
+            </div>
+            <h3 className="text-2xl font-semibold text-white mb-4">REST API Specialist</h3>
+            <p className="text-slate-300 max-w-3xl mx-auto leading-relaxed">
+              I specialize in building RESTful APIs that provide seamless communication between clients and servers.
+              My approach ensures efficiency, security, and scalability using modern tools and best practices.
+            </p>
           </div>
-          <h3 className="text-xl sm:text-2xl font-semibold text-white mb-3 sm:mb-4">
-            REST API Specialist
-          </h3>
-          <p className="text-slate-300 max-w-3xl mx-auto leading-relaxed text-sm sm:text-base">
-            I specialize in building RESTful APIs that provide seamless communication between clients and servers.
-            My approach ensures efficiency, security, and scalability using modern tools and best practices.
-          </p>
         </div>
       </div>
     </section>
