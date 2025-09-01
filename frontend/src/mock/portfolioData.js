@@ -5,7 +5,7 @@ export const portfolioData = {
     location: "Montevideo, Uruguay",
     email: "alan.canto@example.com",
     github: "https://github.com/ajoca",
-    bio: "Analista Programador specializing in innovative digital solutions for web, mobile, and desktop applications. Always exploring new technologies and improving skills.",
+    bio: "Developer specializing in innovative digital solutions for web, mobile, and desktop applications. Always exploring new technologies and improving skills.",
     avatar: "https://avatars.githubusercontent.com/u/137518420?v=4"
   },
   

@@ -2,7 +2,7 @@ import React from 'react';
 import { Calendar, MapPin, ArrowRight } from 'lucide-react';
 import { Badge } from './ui/badge';
 
-/* === DATA ADAPTADA A TU CV === */
+/* === DATA ADAPTADA === */
 export const experienceData = [
   {
     id: 'check',
