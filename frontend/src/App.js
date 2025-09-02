@@ -9,6 +9,7 @@ import { Contact } from "./components/Contact";
 import { Footer } from "./components/Footer";
 import { Toaster } from "./components/ui/toaster";
 import { portfolioData } from "./mock/portfolioData";
+import { projects } from  "./data/projects;";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <Skills skills={portfolioData.skills} />
       <Experience experience={portfolioData.experience} />
       <Contact contact={portfolioData.contact} />
+      <Projects projects={projects} />
       <Footer />
       <Toaster />
     </div>
