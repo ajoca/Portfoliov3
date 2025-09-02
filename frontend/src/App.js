@@ -9,7 +9,7 @@ import { Contact } from "./components/Contact";
 import { Footer } from "./components/Footer";
 import { Toaster } from "./components/ui/toaster";
 import { portfolioData } from "./mock/portfolioData";
-import { projects } from  "./data/projects;";
+import { projects } from  "./data/projects";
 
 function App() {
   return (
