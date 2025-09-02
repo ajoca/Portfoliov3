@@ -41,84 +41,239 @@ export const portfolioData = {
   },
 
   projects: [
-    {
-      id: 1,
-      title: "Game Shop",
-      description: "Online video game store with complete cart functionality and admin panel. Features user authentication, product catalog, and order management.",
-      technologies: ["JavaScript", "HTML", "CSS", "PHP", "MySQL"],
-      github: "https://github.com/ajoca/Game-Shop",
-      demo: "#",
-      image: "https://images.unsplash.com/photo-1556438064-2d7646166914?w=500&h=300&fit=crop",
-      category: "web",
-      featured: true
-    },
-    {
-      id: 2,
-      title: "Pet Adoption Platform",
-      description: "Full-stack pet adoption platform connecting pets with loving families. Includes user profiles, pet listings, and adoption process management.",
-      technologies: ["Java", "Spring Boot", "MySQL", "React"],
-      github: "https://github.com/ajoca/PetAdoption",
-      demo: "#",
-      image: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=500&h=300&fit=crop",
-      category: "web",
-      featured: true
-    },
-    {
-      id: 3,
-      title: "Hotel Reservation System",
-      description: "Comprehensive hotel booking management system with room availability, reservation handling, and customer management features.",
-      technologies: ["Java", "MySQL", "JSP", "CSS"],
-      github: "https://github.com/ajoca/DDA",
-      demo: "#",
-      image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500&h=300&fit=crop",
-      category: "web",
-      featured: true
-    },
-    {
-      id: 4,
-      title: "CTC Gym Mobile",
-      description: "React Native mobile application for gym routines and fitness tracking. Features workout plans, progress tracking, and user profiles.",
-      technologies: ["React Native", "JavaScript", "Firebase"],
-      github: "https://github.com/ajoca/Gimnasioctc",
-      demo: "#",
-      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&h=300&fit=crop",
-      category: "mobile",
-      featured: false
-    },
-    {
-      id: 5,
-      title: "StudyIA",
-      description: "AI-powered study assistant application built with C#. Helps students organize study materials and provides intelligent recommendations.",
-      technologies: ["C#", ".NET", "SQLite", "AI/ML"],
-      github: "https://github.com/ajoca/StudyIA",
-      demo: "#",
-      image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&h=300&fit=crop",
-      category: "desktop",
-      featured: false
-    },
-    {
-      id: 6,
-      title: "AppBooks",
-      description: "Android book management application developed in Kotlin. Features book catalog, reading progress, and personal library management.",
-      technologies: ["Kotlin", "Android", "SQLite", "Material Design"],
-      github: "https://github.com/ajoca/AppBooks",
-      demo: "#",
-      image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=500&h=300&fit=crop",
-      category: "mobile",
-      featured: false
-    },
-    {
-      id: 7,
-      title: "Family Tree Generator",
-      description: "Interactive family tree application that allows users to create and visualize their genealogy with dynamic tree structures.",
-      technologies: ["JavaScript", "HTML5", "CSS3", "SVG"],
-      github: "https://github.com/ajoca/Arbol-Genealogico",
-      demo: "#",
-      image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=500&h=300&fit=crop",
-      category: "web",
-      featured: false
-    }
-  ],
+  {
+    id: 1,
+    title: "RecypeIA",
+    description: "App de recetas asistida por IA.",
+    technologies: ["React", "Tailwind", "Node"],
+    github: "https://github.com/ajoca/RecypeIA",
+    demo: "https://recype-ioxbh8t41-alan-cantos-projects.vercel.app/",
+    image: "https://opengraph.githubassets.com/1/ajoca/RecypeIA",
+    category: "web",
+    featured: true
+  },
+  {
+    id: 2,
+    title: "Barberiav2",
+    description: "Barbería en Next.js con UI moderna.",
+    technologies: ["Next.js", "Tailwind", "shadcn/ui"],
+    github: "https://github.com/ajoca/Barberiav2",
+    demo: "#",
+    image: "https://opengraph.githubassets.com/1/ajoca/Barberiav2",
+    category: "web",
+    featured: true
+  },
+  {
+    id: 3,
+    title: "Portfoliov3",
+    description: "Portfolio con frontend + backend y deploy en Vercel.",
+    technologies: ["React", "Node"],
+    github: "https://github.com/ajoca/Portfoliov3",
+    demo: "#",
+    image: "https://opengraph.githubassets.com/1/ajoca/Portfoliov3",
+    category: "web",
+    featured: false
+  },
+  {
+    id: 4,
+    title: "ajoca (perfil)",
+    description: "Repo de perfil/config de GitHub.",
+    technologies: ["Markdown"],
+    github: "https://github.com/ajoca/ajoca",
+    demo: "#",
+    image: "https://opengraph.githubassets.com/1/ajoca/ajoca",
+    category: "web",
+    featured: false
+  },
+  {
+    id: 5,
+    title: "Portfoliov2",
+    description: "Portfolio con Next.js, MDX y animaciones.",
+    technologies: ["Next.js", "Tailwind", "Framer Motion", "MDX"],
+    github: "https://github.com/ajoca/Portfoliov2",
+    demo: "#",
+    image: "https://opengraph.githubassets.com/1/ajoca/Portfoliov2",
+    category: "web",
+    featured: false
+  },
+  {
+    id: 6,
+    title: "Barberia",
+    description: "Proyecto de barbería (frontend + backend).",
+    technologies: ["Next.js", "API"],
+    github: "https://github.com/ajoca/Barberia",
+    demo: "#",
+    image: "https://opengraph.githubassets.com/1/ajoca/Barberia",
+    category: "web",
+    featured: false
+  },
+  {
+    id: 7,
+    title: "SearchProductIA",
+    description: "Buscador de productos con IA (Node/Express + Sequelize + MySQL).",
+    technologies: ["Node", "Express", "Sequelize", "MySQL"],
+    github: "https://github.com/ajoca/SearchProductIA",
+    demo: "#",
+    image: "https://opengraph.githubassets.com/1/ajoca/SearchProductIA",
+    category: "web",
+    featured: false
+  },
+  {
+    id: 8,
+    title: "StudyIA",
+    description: "API que transforma PDFs en material de estudio.",
+    technologies: [".NET 8", "EF Core", "Swagger", "SQL Server"],
+    github: "https://github.com/ajoca/StudyIA",
+    demo: "#",
+    image: "https://opengraph.githubassets.com/1/ajoca/StudyIA",
+    category: "web",
+    featured: false
+  },
+  {
+    id: 9,
+    title: "AppBooks",
+    description: "App Android de libros con Jetpack Compose y Firebase.",
+    technologies: ["Kotlin", "Compose", "Hilt", "Firebase", "Cloudinary"],
+    github: "https://github.com/ajoca/AppBooks",
+    demo: "#",
+    image: "https://opengraph.githubassets.com/1/ajoca/AppBooks",
+    category: "mobile",
+    featured: false
+  },
+  {
+    id: 10,
+    title: "Pr_Hossana",
+    description: "E-commerce educativo en PHP + MySQL con panel y PDFs.",
+    technologies: ["PHP", "MySQL", "Bootstrap", "FPDF"],
+    github: "https://github.com/ajoca/Pr_Hossana",
+    demo: "#",
+    image: "https://opengraph.githubassets.com/1/ajoca/Pr_Hossana",
+    category: "web",
+    featured: false
+  },
+  {
+    id: 11,
+    title: "PetAdoption (Microservicios)",
+    description: "Plataforma de adopción con microservicios Java/Spring.",
+    technologies: ["Spring Boot", "Eureka", "JWT", "PostgreSQL", "MinIO"],
+    github: "https://github.com/ajoca/PetAdoption",
+    demo: "#",
+    image: "https://opengraph.githubassets.com/1/ajoca/PetAdoption",
+    category: "web",
+    featured: true
+  },
+  {
+    id: 12,
+    title: "Prueba Backend/Frontend",
+    description: "Gestor de tareas: Laravel API + React frontend.",
+    technologies: ["Laravel", "MySQL", "React", "Bootstrap"],
+    github: "https://github.com/ajoca/Prueba-Backend-Frontend",
+    demo: "#",
+    image: "https://opengraph.githubassets.com/1/ajoca/Prueba-Backend-Frontend",
+    category: "web",
+    featured: false
+  },
+  {
+    id: 13,
+    title: "Prueba (Expo)",
+    description: "App móvil de tareas en React Native (Expo).",
+    technologies: ["Expo", "React Native"],
+    github: "https://github.com/ajoca/Prueba",
+    demo: "#",
+    image: "https://opengraph.githubassets.com/1/ajoca/Prueba",
+    category: "mobile",
+    featured: false
+  },
+  {
+    id: 14,
+    title: "Crypto",
+    description: "Repositorio inicial para dashboard + chat IA.",
+    technologies: ["React", "Tailwind"],
+    github: "https://github.com/ajoca/Crypto",
+    demo: "#",
+    image: "https://opengraph.githubassets.com/1/ajoca/Crypto",
+    category: "web",
+    featured: false
+  },
+  {
+    id: 15,
+    title: "Portfolio",
+    description: "Portfolio anterior en React/Tailwind.",
+    technologies: ["React", "Tailwind"],
+    github: "https://github.com/ajoca/Portfolio",
+    demo: "#",
+    image: "https://opengraph.githubassets.com/1/ajoca/Portfolio",
+    category: "web",
+    featured: false
+  },
+  {
+    id: 16,
+    title: "Game Shop",
+    description: "Tienda de videojuegos con catálogo, carrito y admin.",
+    technologies: ["React", "Spring Boot", "MySQL", "Tailwind"],
+    github: "https://github.com/ajoca/Game-Shop",
+    demo: "#",
+    image: "https://opengraph.githubassets.com/1/ajoca/Game-Shop",
+    category: "web",
+    featured: true
+  },
+  {
+    id: 17,
+    title: "Árbol Genealógico",
+    description: "App para construir y visualizar tu árbol genealógico.",
+    technologies: ["React"],
+    github: "https://github.com/ajoca/Arbol-Genealogico",
+    demo: "#",
+    image: "https://opengraph.githubassets.com/1/ajoca/Arbol-Genealogico",
+    category: "web",
+    featured: false
+  },
+  {
+    id: 18,
+    title: "Gimnasio CTC",
+    description: "App móvil (Expo) para gestión de gimnasio.",
+    technologies: ["Expo", "React Native"],
+    github: "https://github.com/ajoca/Gimnasioctc",
+    demo: "#",
+    image: "https://opengraph.githubassets.com/1/ajoca/Gimnasioctc",
+    category: "mobile",
+    featured: false
+  },
+  {
+    id: 19,
+    title: "Tienda Online (fork)",
+    description: "Fork de tienda React + Spring Boot.",
+    technologies: ["React", "Spring Boot"],
+    github: "https://github.com/ajoca/Tienda_Online_React_SpringBoot",
+    demo: "#",
+    image: "https://opengraph.githubassets.com/1/ajoca/Tienda_Online_React_SpringBoot",
+    category: "web",
+    featured: false
+  },
+  {
+    id: 20,
+    title: "DDA (Hotel Reservations)",
+    description: "OB DDA en Java (educativo).",
+    technologies: ["Java", "MySQL"],
+    github: "https://github.com/ajoca/DDA",
+    demo: "#",
+    image: "https://opengraph.githubassets.com/1/ajoca/DDA",
+    category: "web",
+    featured: true
+  },
+  {
+    id: 21,
+    title: "Códigos HTML + CSS interactivos",
+    description: "Colección de mini-experimentos HTML/CSS.",
+    technologies: ["HTML", "CSS"],
+    github: "https://github.com/ajoca/Codigos-html-con-css-interactivos-",
+    demo: "#",
+    image: "https://opengraph.githubassets.com/1/ajoca/Codigos-html-con-css-interactivos-",
+    category: "web",
+    featured: false
+  }
+],
+
 
  experience: [
     {
