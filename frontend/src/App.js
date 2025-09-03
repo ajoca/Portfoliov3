@@ -20,7 +20,7 @@ function App() {
       <Skills skills={portfolioData.skills} />
       <Experience experience={portfolioData.experience} />
       <Contact contact={portfolioData.contact} />
-      <Projects projects={projects} />
+
       <Footer />
       <Toaster />
     </div>
