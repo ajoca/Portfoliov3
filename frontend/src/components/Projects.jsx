@@ -4,7 +4,7 @@ import { Github, ExternalLink, Filter } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { motion } from "framer-motion";
-import { projects as projectsData } from "../data/projects";
+import { projects as projectsData } from "../data/projects.ts";
 
 const containerVariants = {
   hidden: { opacity: 0 },
