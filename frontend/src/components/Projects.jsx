@@ -4,7 +4,7 @@ import { Github, ExternalLink, Filter } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { motion } from "framer-motion";
-import { projects as projectsData } from "@/data/projects";
+import { projects as projectsData } from "../data/projects";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -46,7 +46,6 @@ const ProjectCard = ({ project, index }) => {
 
       {/* Project Image */}
       <div className="relative z-20 h-52 overflow-hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={project.image}
           alt={project.title}
