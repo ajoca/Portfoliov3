@@ -262,13 +262,35 @@ export const portfolioData = {
     featured: true
   },
   {
-    id: 21,
-    title: "Códigos HTML + CSS interactivos",
-    description: "Colección de mini-experimentos HTML/CSS.",
-    technologies: ["HTML", "CSS"],
-    github: "https://github.com/ajoca/Codigos-html-con-css-interactivos-",
+    id: 22,
+    title: "Calculadora React",
+    description: "Calculadora funcional construida con React y Tailwind CSS.",
+    technologies: ["React", "Tailwind"],
+    github: "https://github.com/ajoca/Calculadora-React",
     demo: "#",
-    image: "https://opengraph.githubassets.com/1/ajoca/Codigos-html-con-css-interactivos-",
+    image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop",
+    category: "web",
+    featured: false
+  },
+  {
+    id: 23,
+    title: "App del Clima",
+    description: "Aplicación del clima con API de OpenWeatherMap.",
+    technologies: ["JavaScript", "API"],
+    github: "https://github.com/ajoca/Weather-App",
+    demo: "#",
+    image: "https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=400&h=300&fit=crop",
+    category: "web",
+    featured: false
+  },
+  {
+    id: 24,
+    title: "Lista de Tareas",
+    description: "App de lista de tareas con localStorage.",
+    technologies: ["HTML", "CSS", "JavaScript"],
+    github: "https://github.com/ajoca/Todo-App",
+    demo: "#",
+    image: "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=400&h=300&fit=crop",
     category: "web",
     featured: false
   }
