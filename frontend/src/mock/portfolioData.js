@@ -48,7 +48,7 @@ export const portfolioData = {
     technologies: ["React", "Tailwind", "Node"],
     github: "https://github.com/ajoca/RecypeIA",
     demo: "https://recype-ioxbh8t41-alan-cantos-projects.vercel.app/",
-    image: "https://opengraph.githubassets.com/1/ajoca/RecypeIA",
+    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop",
     category: "web",
     featured: true
   },
@@ -59,7 +59,7 @@ export const portfolioData = {
     technologies: ["Next.js", "Tailwind", "shadcn/ui"],
     github: "https://github.com/ajoca/Barberiav2",
     demo: "#",
-    image: "https://opengraph.githubassets.com/1/ajoca/Barberiav2",
+    image: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&h=300&fit=crop",
     category: "web",
     featured: true
   },
@@ -70,7 +70,7 @@ export const portfolioData = {
     technologies: ["React", "Node"],
     github: "https://github.com/ajoca/Portfoliov3",
     demo: "#",
-    image: "https://opengraph.githubassets.com/1/ajoca/Portfoliov3",
+    image: "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=400&h=300&fit=crop",
     category: "web",
     featured: false
   },
@@ -81,7 +81,7 @@ export const portfolioData = {
     technologies: ["Markdown"],
     github: "https://github.com/ajoca/ajoca",
     demo: "#",
-    image: "https://opengraph.githubassets.com/1/ajoca/ajoca",
+    image: "https://images.unsplash.com/photo-1556075798-4825dfaaf498?w=400&h=300&fit=crop",
     category: "web",
     featured: false
   },
@@ -92,7 +92,7 @@ export const portfolioData = {
     technologies: ["Next.js", "Tailwind", "Framer Motion", "MDX"],
     github: "https://github.com/ajoca/Portfoliov2",
     demo: "#",
-    image: "https://opengraph.githubassets.com/1/ajoca/Portfoliov2",
+    image: "https://images.unsplash.com/photo-1541462608143-67571c6738dd?w=400&h=300&fit=crop",
     category: "web",
     featured: false
   },
@@ -103,7 +103,7 @@ export const portfolioData = {
     technologies: ["Next.js", "API"],
     github: "https://github.com/ajoca/Barberia",
     demo: "#",
-    image: "https://opengraph.githubassets.com/1/ajoca/Barberia",
+    image: "https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=400&h=300&fit=crop",
     category: "web",
     featured: false
   },
@@ -114,7 +114,7 @@ export const portfolioData = {
     technologies: ["Node", "Express", "Sequelize", "MySQL"],
     github: "https://github.com/ajoca/SearchProductIA",
     demo: "#",
-    image: "https://opengraph.githubassets.com/1/ajoca/SearchProductIA",
+    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=300&fit=crop",
     category: "web",
     featured: false
   },
@@ -125,7 +125,7 @@ export const portfolioData = {
     technologies: [".NET 8", "EF Core", "Swagger", "SQL Server"],
     github: "https://github.com/ajoca/StudyIA",
     demo: "#",
-    image: "https://opengraph.githubassets.com/1/ajoca/StudyIA",
+    image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=300&fit=crop",
     category: "web",
     featured: false
   },
@@ -136,7 +136,7 @@ export const portfolioData = {
     technologies: ["Kotlin", "Compose", "Hilt", "Firebase", "Cloudinary"],
     github: "https://github.com/ajoca/AppBooks",
     demo: "#",
-    image: "https://opengraph.githubassets.com/1/ajoca/AppBooks",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop",
     category: "mobile",
     featured: false
   },
@@ -147,7 +147,7 @@ export const portfolioData = {
     technologies: ["PHP", "MySQL", "Bootstrap", "FPDF"],
     github: "https://github.com/ajoca/Pr_Hossana",
     demo: "#",
-    image: "https://opengraph.githubassets.com/1/ajoca/Pr_Hossana",
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=300&fit=crop",
     category: "web",
     featured: false
   },
@@ -158,7 +158,7 @@ export const portfolioData = {
     technologies: ["Spring Boot", "Eureka", "JWT", "PostgreSQL", "MinIO"],
     github: "https://github.com/ajoca/PetAdoption",
     demo: "#",
-    image: "https://opengraph.githubassets.com/1/ajoca/PetAdoption",
+    image: "https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=400&h=300&fit=crop",
     category: "web",
     featured: true
   },
@@ -169,7 +169,7 @@ export const portfolioData = {
     technologies: ["Laravel", "MySQL", "React", "Bootstrap"],
     github: "https://github.com/ajoca/Prueba-Backend-Frontend",
     demo: "#",
-    image: "https://opengraph.githubassets.com/1/ajoca/Prueba-Backend-Frontend",
+    image: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400&h=300&fit=crop",
     category: "web",
     featured: false
   },
@@ -180,7 +180,7 @@ export const portfolioData = {
     technologies: ["Expo", "React Native"],
     github: "https://github.com/ajoca/Prueba",
     demo: "#",
-    image: "https://opengraph.githubassets.com/1/ajoca/Prueba",
+    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&h=300&fit=crop",
     category: "mobile",
     featured: false
   },
@@ -191,7 +191,7 @@ export const portfolioData = {
     technologies: ["React", "Tailwind"],
     github: "https://github.com/ajoca/Crypto",
     demo: "#",
-    image: "https://opengraph.githubassets.com/1/ajoca/Crypto",
+    image: "https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=400&h=300&fit=crop",
     category: "web",
     featured: false
   },
@@ -202,7 +202,7 @@ export const portfolioData = {
     technologies: ["React", "Tailwind"],
     github: "https://github.com/ajoca/Portfolio",
     demo: "#",
-    image: "https://opengraph.githubassets.com/1/ajoca/Portfolio",
+    image: "https://images.unsplash.com/photo-1541462608143-67571c6738dd?w=400&h=300&fit=crop",
     category: "web",
     featured: false
   },
@@ -213,7 +213,7 @@ export const portfolioData = {
     technologies: ["React", "Spring Boot", "MySQL", "Tailwind"],
     github: "https://github.com/ajoca/Game-Shop",
     demo: "#",
-    image: "https://opengraph.githubassets.com/1/ajoca/Game-Shop",
+    image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=300&fit=crop",
     category: "web",
     featured: true
   },
@@ -224,7 +224,7 @@ export const portfolioData = {
     technologies: ["React"],
     github: "https://github.com/ajoca/Arbol-Genealogico",
     demo: "#",
-    image: "https://opengraph.githubassets.com/1/ajoca/Arbol-Genealogico",
+    image: "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400&h=300&fit=crop",
     category: "web",
     featured: false
   },
@@ -235,7 +235,7 @@ export const portfolioData = {
     technologies: ["Expo", "React Native"],
     github: "https://github.com/ajoca/Gimnasioctc",
     demo: "#",
-    image: "https://opengraph.githubassets.com/1/ajoca/Gimnasioctc",
+    image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop",
     category: "mobile",
     featured: false
   },
@@ -246,7 +246,7 @@ export const portfolioData = {
     technologies: ["React", "Spring Boot"],
     github: "https://github.com/ajoca/Tienda_Online_React_SpringBoot",
     demo: "#",
-    image: "https://opengraph.githubassets.com/1/ajoca/Tienda_Online_React_SpringBoot",
+    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=300&fit=crop",
     category: "web",
     featured: false
   },
@@ -257,7 +257,7 @@ export const portfolioData = {
     technologies: ["Java", "MySQL"],
     github: "https://github.com/ajoca/DDA",
     demo: "#",
-    image: "https://opengraph.githubassets.com/1/ajoca/DDA",
+    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop",
     category: "web",
     featured: true
   },
