@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Github, ExternalLink, Filter } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import { projects as projectsData } from "../data/projects.ts";
 
 const ProjectCard = ({ project, index }) => {
   const techs = project.technologies ?? [];
@@ -110,8 +109,8 @@ const ProjectCard = ({ project, index }) => {
   );
 };
 
-export const Projects = ({ projects = projectsData }) => {
-  const [filter, setFilter] = useState<"all" | "web" | "mobile" | "desktop">("all");
+export const Projects = ({ projects }) => {
+  const [filter, setFilter] = useState("all");
   const filteredProjects =
     filter === "all" ? projects : projects.filter((p) => p.category === filter);
 
