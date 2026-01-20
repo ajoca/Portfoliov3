@@ -6,16 +6,6 @@ import { Badge } from "./ui/badge";
 import { motion } from "framer-motion";
 import { projects as projectsData } from "../data/projects.ts";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -178,17 +168,11 @@ export const Projects = ({ projects = projectsData }) => {
         </div>
 
         {/* Projects Grid */}
-        <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProjects.map((project, index) => (
             <ProjectCard key={project.id} project={project} index={index} />
           ))}
-        </motion.div>
+        </div>
 
         {/* View More Button */}
         <div className="text-center mt-16">
