@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown, Github, Mail, MapPin } from 'lucide-react';
 import { Button } from './ui/button';
-import { useTranslation } from 'react-i18next';
 
 const GeometricShape = ({ className, animationDelay = 0 }) => (
   <div 
@@ -20,7 +19,6 @@ const FloatingCube = ({ className, size = "w-8 h-8" }) => (
 
 export const Hero = ({ data }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const { t } = useTranslation();
 
   useEffect(() => {
     setIsVisible(true);
@@ -80,7 +78,7 @@ export const Hero = ({ data }) => {
             onClick={scrollToProjects}
             className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-emerald-600/25 hover:-translate-y-1"
           >
-            {t('View My Work')}
+            View My Work
           </Button>
           <Button 
             variant="outline"
@@ -89,7 +87,7 @@ export const Hero = ({ data }) => {
           >
             <a href={data.github} target="_blank" rel="noopener noreferrer">
               <Github className="w-4 h-4 mr-2" />
-              {t('GitHub Profile')}
+              GitHub Profile
             </a>
           </Button>
         </div>

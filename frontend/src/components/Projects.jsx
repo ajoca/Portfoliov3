@@ -3,26 +3,13 @@ import React, { useState } from "react";
 import { Github, ExternalLink, Filter } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import { motion } from "framer-motion";
 import { projects as projectsData } from "../data/projects.ts";
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5,
-    },
-  },
-};
 
 const ProjectCard = ({ project, index }) => {
   const techs = project.technologies ?? [];
 
   return (
-    <motion.div
-      variants={itemVariants}
+    <div
       className="group relative glass hover-lift rounded-2xl overflow-hidden border border-slate-800/50 hover:border-emerald-400/50 transition-all duration-700 hover:-translate-y-4 hover:shadow-2xl hover:shadow-emerald-400/20 animate-fade-scale"
     >
       {/* LINK que estira toda la tarjeta */}
@@ -119,7 +106,7 @@ const ProjectCard = ({ project, index }) => {
 
       {/* Subtle border glow */}
       <div className="absolute inset-0 rounded-2xl border border-emerald-400/0 group-hover:border-emerald-400/20 transition-all duration-500" />
-    </motion.div>
+    </div>
   );
 };
 

@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Github, Mail, Languages } from 'lucide-react';
+import { Menu, X, Github, Mail } from 'lucide-react';
 import { Button } from './ui/button';
-import { useTranslation } from 'react-i18next';
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,17 +16,12 @@ export const Navigation = () => {
   }, []);
 
   const navItems = [
-    { label: t('Home'), href: '#home' },
-    { label: t('Projects'), href: '#projects' },
-    { label: t('Skills'), href: '#skills' },
-    { label: t('Experience'), href: '#experience' },
-    { label: t('Blog'), href: '#blog' },
-    { label: t('Contact'), href: '#contact' }
+    { label: 'Home', href: '#home' },
+    { label: 'Projects', href: '#projects' },
+    { label: 'Skills', href: '#skills' },
+    { label: 'Experience', href: '#experience' },
+    { label: 'Contact', href: '#contact' }
   ];
-
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
-  };
 
   const scrollToSection = (href) => {
     const element = document.querySelector(href);
@@ -63,15 +56,6 @@ export const Navigation = () => {
             
             {/* Social Links */}
             <div className="flex items-center space-x-4 ml-8">
-              <Button
-                size="sm"
-                variant="ghost"
-                className="text-slate-300 hover:text-emerald-400"
-                onClick={() => changeLanguage(i18n.language === 'en' ? 'es' : 'en')}
-              >
-                <Languages className="w-4 h-4" />
-                {i18n.language === 'en' ? 'ES' : 'EN'}
-              </Button>
               <Button
                 size="sm"
                 variant="ghost"
@@ -120,15 +104,6 @@ export const Navigation = () => {
               
               {/* Mobile Social Links */}
               <div className="flex items-center space-x-4 pt-4 border-t border-slate-800/50">
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="text-slate-300 hover:text-emerald-400"
-                  onClick={() => changeLanguage(i18n.language === 'en' ? 'es' : 'en')}
-                >
-                  <Languages className="w-4 h-4 mr-2" />
-                  {i18n.language === 'en' ? 'ES' : 'EN'}
-                </Button>
                 <Button
                   size="sm"
                   variant="ghost"
