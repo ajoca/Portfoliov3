@@ -310,6 +310,28 @@ export const portfolioData = {
         'Excel/JSON','Postman','Insomnia','Scrum','Sunmi'
       ],
     },
+      {
+        id: 'scanntech',
+        position: 'Digital Adoption Specialist & Helpdesk',
+        company: 'Scanntech',
+        period: 'Oct 2025 – Actualidad',
+        description:
+          'Soporte técnico nivel 1 a 5 y administración completa del tenant Microsoft 365; especialista en adopción digital; automatización de procesos con Power Automate, scripts y agentes para optimizar tareas diarias.',
+        technologies: [
+          'Microsoft 365', 'Power Automate', 'Automatización', 'Helpdesk', 'Scripts', 'Adopción Digital', 'Administración Tenant', 'Soporte N1-N5'
+        ],
+      },
+      {
+        id: 'buenimar',
+        position: 'Data Analyst & Full Stack Developer',
+        company: 'Buenimar',
+        period: 'Oct 2025 – Actualidad',
+        description:
+          'Análisis de datos, desarrollo web empresarial, automatizaciones administrativas y contables (Excel avanzado, Python, Java); colaboración con empresas reconocidas (Conaprole, Coca Cola) en procesos de cambio digital y adopción de nuevas tecnologías; cursos de seguridad y soporte técnico integral.',
+        technologies: [
+          'Excel Avanzado', 'Python', 'Java', 'Desarrollo Web', 'Automatización', 'Administración', 'Contabilidad', 'Adopción Digital', 'Soporte', 'Seguridad', 'Conaprole', 'Coca Cola'
+        ],
+      },
     {
       id: 'nublit',
       position: 'IT Technical Support Specialist',
