@@ -7,11 +7,18 @@ import { useToast } from '../hooks/use-toast';
 import { portfolioData } from '../mock/portfolioData';
 
 const API_BASE_URL = (process.env.REACT_APP_BACKEND_URL || '').replace(/\/$/, '');
-const CONTACT_ENDPOINT = API_BASE_URL ? `${API_BASE_URL}/api/contact` : '/api/contact';
+const DIRECT_CONTACT_ENDPOINT = (process.env.REACT_APP_CONTACT_ENDPOINT || '').trim();
+const WEB3FORMS_ACCESS_KEY = (process.env.REACT_APP_WEB3FORMS_ACCESS_KEY || '').trim();
 const MAX_ATTACHMENTS = 3;
 const MAX_ATTACHMENT_SIZE_MB = 10;
 const MAX_ATTACHMENT_SIZE_BYTES = MAX_ATTACHMENT_SIZE_MB * 1024 * 1024;
 const ALLOWED_ATTACHMENT_EXTENSIONS = ['pdf', 'doc', 'docx', 'txt', 'rtf', 'jpg', 'jpeg', 'png', 'webp', 'gif', 'zip', 'rar'];
+
+const CONTACT_ENDPOINTS = [
+  ...(API_BASE_URL ? [`${API_BASE_URL}/api/contact`, `${API_BASE_URL}/contact`] : []),
+  '/api/contact',
+  '/contact',
+];
 
 const getErrorMessage = (detail) => {
   if (Array.isArray(detail) && detail.length > 0) {
@@ -22,6 +29,33 @@ const getErrorMessage = (detail) => {
   }
   return 'Error al enviar el mensaje';
 };
+
+const parseResponseBody = async (response) => {
+  const contentType = (response.headers.get('content-type') || '').toLowerCase();
+  if (contentType.includes('application/json')) {
+    return response.json();
+  }
+
+  const text = await response.text();
+  return {
+    detail: text,
+  };
+};
+
+const sanitizeErrorText = (text) => {
+  if (!text || typeof text !== 'string') {
+    return '';
+  }
+
+  // Avoid showing a full HTML error page inside toasts.
+  if (text.includes('<!doctype html') || text.includes('<html')) {
+    return 'El servidor devolvió una respuesta inválida.';
+  }
+
+  return text.trim();
+};
+
+const isWeb3FormsEndpoint = (url) => /web3forms\.com\//i.test(url || '');
 
 const ContactInfo = ({ icon: Icon, label, value, link }) => (
   <div className="flex items-center p-6 glass hover-lift rounded-xl border border-slate-800/50 hover:border-emerald-400/50 transition-all duration-500 group">
@@ -183,14 +217,53 @@ export const Contact = ({ contact }) => {
         payload.append('attachments', file);
       });
 
-      const response = await fetch(CONTACT_ENDPOINT, {
-        method: 'POST',
-        body: payload,
-      });
+      let response = null;
+      let data = { detail: 'No se recibió respuesta del servidor.' };
 
-      const data = await response.json();
+      if (DIRECT_CONTACT_ENDPOINT) {
+        if (isWeb3FormsEndpoint(DIRECT_CONTACT_ENDPOINT)) {
+          if (!WEB3FORMS_ACCESS_KEY) {
+            throw new Error('Falta configurar REACT_APP_WEB3FORMS_ACCESS_KEY');
+          }
+          payload.append('access_key', WEB3FORMS_ACCESS_KEY);
+          payload.append('subject', 'Nuevo mensaje de contacto desde Portfolio');
+          payload.append('from_name', formData.name.trim());
+        }
 
-      if (response.ok) {
+        response = await fetch(DIRECT_CONTACT_ENDPOINT, {
+          method: 'POST',
+          body: payload,
+        });
+
+        data = await parseResponseBody(response);
+
+        if (!response.ok) {
+          throw new Error(
+            sanitizeErrorText(getErrorMessage(data?.message || data?.detail)) ||
+              'Error al enviar el mensaje'
+          );
+        }
+
+        if (Object.prototype.hasOwnProperty.call(data || {}, 'success') && data.success === false) {
+          throw new Error(sanitizeErrorText(data.message) || 'Error al enviar el mensaje');
+        }
+      } else {
+        for (const endpoint of CONTACT_ENDPOINTS) {
+          response = await fetch(endpoint, {
+            method: 'POST',
+            body: payload,
+          });
+
+          data = await parseResponseBody(response);
+
+          // Retry on route-not-found only. Other errors should be returned directly.
+          if (response.status !== 404) {
+            break;
+          }
+        }
+      }
+
+      if (response && response.ok) {
         toast({
           title: "¡Mensaje enviado!",
           description: data.message || "Te responderé pronto. ¡Gracias por contactarme!",
@@ -201,13 +274,14 @@ export const Contact = ({ contact }) => {
           fileInputRef.current.value = '';
         }
       } else {
-        throw new Error(getErrorMessage(data.detail));
+        const detailMessage = getErrorMessage(data?.detail);
+        throw new Error(sanitizeErrorText(detailMessage) || 'Error al enviar el mensaje');
       }
     } catch (error) {
-      console.error('Contact form error:', error);
+      console.error('Contact form error:', error, 'Endpoints probados:', CONTACT_ENDPOINTS, 'Endpoint directo:', DIRECT_CONTACT_ENDPOINT);
       toast({
         title: "Error al enviar",
-        description: "Hubo un problema al enviar tu mensaje. Por favor, inténtalo de nuevo.",
+        description: error?.message || "Hubo un problema al enviar tu mensaje. Por favor, inténtalo de nuevo.",
         variant: "destructive"
       });
     } finally {
