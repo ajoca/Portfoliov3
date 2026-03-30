@@ -1,17 +1,19 @@
-from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi import FastAPI, APIRouter, HTTPException, Request, UploadFile
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
+import mimetypes
 from pathlib import Path
-from pydantic import BaseModel, Field, EmailStr
-from typing import List
+from pydantic import BaseModel, Field, EmailStr, ValidationError
+from typing import List, Tuple
 import uuid
 from datetime import datetime
 import aiosmtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.application import MIMEApplication
 
 
 ROOT_DIR = Path(__file__).parent
@@ -52,15 +54,85 @@ GMAIL_USER = os.environ.get('GMAIL_USER')
 GMAIL_PASSWORD = os.environ.get('GMAIL_PASSWORD')
 SMTP_HOST = os.environ.get('SMTP_HOST', 'smtp.gmail.com')
 SMTP_PORT = int(os.environ.get('SMTP_PORT', 587))
+CONTACT_RECEIVER = os.environ.get('CONTACT_RECEIVER', GMAIL_USER)
+MAX_ATTACHMENTS = int(os.environ.get('MAX_ATTACHMENTS', 3))
+MAX_ATTACHMENT_SIZE_MB = int(os.environ.get('MAX_ATTACHMENT_SIZE_MB', 10))
+MAX_ATTACHMENT_SIZE_BYTES = MAX_ATTACHMENT_SIZE_MB * 1024 * 1024
+ALLOWED_ATTACHMENT_EXTENSIONS = {
+    ext.strip().lower()
+    for ext in os.environ.get(
+        'ALLOWED_ATTACHMENT_EXTENSIONS',
+        '.pdf,.doc,.docx,.txt,.rtf,.jpg,.jpeg,.png,.webp,.gif,.zip,.rar'
+    ).split(',')
+    if ext.strip()
+}
 
-async def send_email(contact_data: ContactMessage):
+async def prepare_attachments(
+    files: List[UploadFile],
+) -> Tuple[List[dict], List[Tuple[str, bytes, str]]]:
+    attachment_metadata: List[dict] = []
+    attachment_payloads: List[Tuple[str, bytes, str]] = []
+
+    non_empty_files = [f for f in files if f and getattr(f, "filename", None)]
+
+    if len(non_empty_files) > MAX_ATTACHMENTS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Máximo {MAX_ATTACHMENTS} archivos adjuntos permitidos.",
+        )
+
+    for attachment in non_empty_files:
+        safe_filename = Path(attachment.filename).name
+        extension = Path(safe_filename).suffix.lower()
+
+        if extension not in ALLOWED_ATTACHMENT_EXTENSIONS:
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    f"El archivo '{safe_filename}' no está permitido. "
+                    f"Extensiones válidas: {', '.join(sorted(ALLOWED_ATTACHMENT_EXTENSIONS))}"
+                ),
+            )
+
+        file_bytes = await attachment.read()
+        size_bytes = len(file_bytes)
+
+        if size_bytes > MAX_ATTACHMENT_SIZE_BYTES:
+            raise HTTPException(
+                status_code=400,
+                detail=f"El archivo '{safe_filename}' supera el límite de {MAX_ATTACHMENT_SIZE_MB}MB.",
+            )
+
+        content_type = attachment.content_type or mimetypes.guess_type(safe_filename)[0] or "application/octet-stream"
+
+        attachment_metadata.append(
+            {
+                "filename": safe_filename,
+                "content_type": content_type,
+                "size": size_bytes,
+            }
+        )
+        attachment_payloads.append((safe_filename, file_bytes, content_type))
+
+    return attachment_metadata, attachment_payloads
+
+
+async def send_email(
+    contact_data: ContactMessage,
+    attachment_payloads: List[Tuple[str, bytes, str]] | None = None,
+):
     """Send email using Gmail SMTP"""
     try:
         # Create message
-        msg = MIMEMultipart('alternative')
+        if not GMAIL_USER or not GMAIL_PASSWORD:
+            logger.error("GMAIL_USER o GMAIL_PASSWORD no están configurados")
+            return False
+
+        msg = MIMEMultipart('mixed')
         msg['Subject'] = f"Nuevo mensaje de contacto de {contact_data.name}"
         msg['From'] = GMAIL_USER
-        msg['To'] = GMAIL_USER
+        msg['To'] = CONTACT_RECEIVER
+        msg['Reply-To'] = str(contact_data.email)
 
         # HTML email content
         html_content = f"""
@@ -91,12 +163,18 @@ async def send_email(contact_data: ContactMessage):
         """
 
         # Plain text version
+        attachment_names = [filename for filename, _, _ in (attachment_payloads or [])]
+        attachments_text = "Sin adjuntos"
+        if attachment_names:
+            attachments_text = ", ".join(attachment_names)
+
         text_content = f"""
         Nuevo Mensaje de Contacto - Portfolio
         
         Información del Contacto:
         Nombre: {contact_data.name}
         Email: {contact_data.email}
+        Adjuntos: {attachments_text}
         
         Mensaje:
         {contact_data.message}
@@ -105,11 +183,19 @@ async def send_email(contact_data: ContactMessage):
         """
 
         # Create the message parts
+        alternative_part = MIMEMultipart('alternative')
         text_part = MIMEText(text_content, 'plain')
         html_part = MIMEText(html_content, 'html')
 
-        msg.attach(text_part)
-        msg.attach(html_part)
+        alternative_part.attach(text_part)
+        alternative_part.attach(html_part)
+        msg.attach(alternative_part)
+
+        for filename, data, content_type in attachment_payloads or []:
+            subtype = content_type.split('/', 1)[-1] if '/' in content_type else 'octet-stream'
+            attachment_part = MIMEApplication(data, _subtype=subtype)
+            attachment_part.add_header('Content-Disposition', 'attachment', filename=filename)
+            msg.attach(attachment_part)
 
         # Send email
         await aiosmtplib.send(
@@ -132,21 +218,50 @@ async def root():
     return {"message": "Portfolio API - Contact endpoint available"}
 
 @api_router.post("/contact", response_model=ContactResponse)
-async def send_contact_message(contact_data: ContactMessage):
+async def send_contact_message(request: Request):
     """Send contact form message via email"""
     try:
+        content_type = request.headers.get("content-type", "").lower()
+        attachment_metadata: List[dict] = []
+        attachment_payloads: List[Tuple[str, bytes, str]] = []
+
+        if "application/json" in content_type:
+            payload = await request.json()
+            contact_data = ContactMessage(**payload)
+        elif "multipart/form-data" in content_type:
+            form_data = await request.form()
+            contact_data = ContactMessage(
+                name=form_data.get("name", ""),
+                email=form_data.get("email", ""),
+                message=form_data.get("message", ""),
+            )
+
+            raw_attachments = form_data.getlist("attachments")
+            upload_attachments = [
+                file
+                for file in raw_attachments
+                if hasattr(file, "read") and hasattr(file, "filename")
+            ]
+            attachment_metadata, attachment_payloads = await prepare_attachments(upload_attachments)
+        else:
+            raise HTTPException(
+                status_code=415,
+                detail="Content-Type no soportado. Usa application/json o multipart/form-data.",
+            )
+
         # Store in database for backup
         contact_record = {
             "id": str(uuid.uuid4()),
             "name": contact_data.name,
             "email": contact_data.email,
             "message": contact_data.message,
+            "attachments": attachment_metadata,
             "timestamp": datetime.utcnow(),
             "status": "pending"
         }
         
         # Send email
-        email_sent = await send_email(contact_data)
+        email_sent = await send_email(contact_data, attachment_payloads)
         
         if email_sent:
             contact_record["status"] = "sent"
@@ -163,6 +278,8 @@ async def send_contact_message(contact_data: ContactMessage):
                 detail="Error al enviar el mensaje. Por favor, inténtalo de nuevo."
             )
             
+    except ValidationError as e:
+        raise HTTPException(status_code=422, detail=e.errors())
     except HTTPException:
         raise
     except Exception as e:
