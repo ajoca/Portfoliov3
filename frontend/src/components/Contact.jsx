@@ -1,12 +1,27 @@
-import React, { useState } from 'react';
-import { Mail, Github, MapPin, Send, User, MessageSquare, CheckCircle, AlertCircle } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { Mail, Github, MapPin, Send, User, MessageSquare, AlertCircle, Paperclip, X } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { useToast } from '../hooks/use-toast';
 import { portfolioData } from '../mock/portfolioData';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API_BASE_URL = (process.env.REACT_APP_BACKEND_URL || '').replace(/\/$/, '');
+const CONTACT_ENDPOINT = API_BASE_URL ? `${API_BASE_URL}/api/contact` : '/api/contact';
+const MAX_ATTACHMENTS = 3;
+const MAX_ATTACHMENT_SIZE_MB = 10;
+const MAX_ATTACHMENT_SIZE_BYTES = MAX_ATTACHMENT_SIZE_MB * 1024 * 1024;
+const ALLOWED_ATTACHMENT_EXTENSIONS = ['pdf', 'doc', 'docx', 'txt', 'rtf', 'jpg', 'jpeg', 'png', 'webp', 'gif', 'zip', 'rar'];
+
+const getErrorMessage = (detail) => {
+  if (Array.isArray(detail) && detail.length > 0) {
+    return detail.map((item) => item?.msg).filter(Boolean).join(', ');
+  }
+  if (typeof detail === 'string') {
+    return detail;
+  }
+  return 'Error al enviar el mensaje';
+};
 
 const ContactInfo = ({ icon: Icon, label, value, link }) => (
   <div className="flex items-center p-6 glass hover-lift rounded-xl border border-slate-800/50 hover:border-emerald-400/50 transition-all duration-500 group">
@@ -39,8 +54,10 @@ export const Contact = ({ contact }) => {
     email: '',
     message: ''
   });
+  const [attachments, setAttachments] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+  const fileInputRef = useRef(null);
   const { toast } = useToast();
 
   const validateForm = () => {
@@ -63,6 +80,10 @@ export const Contact = ({ contact }) => {
     } else if (formData.message.trim().length < 10) {
       newErrors.message = 'El mensaje debe tener al menos 10 caracteres';
     }
+
+    if (attachments.length > MAX_ATTACHMENTS) {
+      newErrors.attachments = `Máximo ${MAX_ATTACHMENTS} archivos permitidos`;
+    }
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -84,6 +105,60 @@ export const Contact = ({ contact }) => {
     }
   };
 
+  const handleFilesChange = (e) => {
+    const selectedFiles = Array.from(e.target.files || []);
+
+    if (!selectedFiles.length) {
+      setAttachments([]);
+      return;
+    }
+
+    if (selectedFiles.length > MAX_ATTACHMENTS) {
+      setErrors((prev) => ({ ...prev, attachments: `Máximo ${MAX_ATTACHMENTS} archivos permitidos` }));
+      toast({
+        title: 'Demasiados archivos',
+        description: `Solo puedes adjuntar hasta ${MAX_ATTACHMENTS} archivos.`,
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    const invalidFile = selectedFiles.find((file) => {
+      const extension = file.name.split('.').pop()?.toLowerCase() || '';
+      return !ALLOWED_ATTACHMENT_EXTENSIONS.includes(extension) || file.size > MAX_ATTACHMENT_SIZE_BYTES;
+    });
+
+    if (invalidFile) {
+      const extension = invalidFile.name.split('.').pop()?.toLowerCase() || '';
+      const extensionAllowed = ALLOWED_ATTACHMENT_EXTENSIONS.includes(extension);
+      const errorMessage = extensionAllowed
+        ? `El archivo "${invalidFile.name}" supera ${MAX_ATTACHMENT_SIZE_MB}MB.`
+        : `El archivo "${invalidFile.name}" no está permitido.`;
+
+      setErrors((prev) => ({ ...prev, attachments: errorMessage }));
+      toast({
+        title: 'Adjunto inválido',
+        description: errorMessage,
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    setAttachments(selectedFiles);
+    setErrors((prev) => ({ ...prev, attachments: '' }));
+  };
+
+  const removeAttachment = (indexToRemove) => {
+    const updated = attachments.filter((_, index) => index !== indexToRemove);
+    setAttachments(updated);
+
+    if (fileInputRef.current) {
+      const transfer = new DataTransfer();
+      updated.forEach((file) => transfer.items.add(file));
+      fileInputRef.current.files = transfer.files;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -99,12 +174,18 @@ export const Contact = ({ contact }) => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${BACKEND_URL}/api/contact`, {
+      const payload = new FormData();
+      payload.append('name', formData.name.trim());
+      payload.append('email', formData.email.trim());
+      payload.append('message', formData.message.trim());
+
+      attachments.forEach((file) => {
+        payload.append('attachments', file);
+      });
+
+      const response = await fetch(CONTACT_ENDPOINT, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+        body: payload,
       });
 
       const data = await response.json();
@@ -115,8 +196,12 @@ export const Contact = ({ contact }) => {
           description: data.message || "Te responderé pronto. ¡Gracias por contactarme!",
         });
         setFormData({ name: '', email: '', message: '' });
+        setAttachments([]);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
       } else {
-        throw new Error(data.detail || 'Error al enviar el mensaje');
+        throw new Error(getErrorMessage(data.detail));
       }
     } catch (error) {
       console.error('Contact form error:', error);
@@ -251,6 +336,48 @@ export const Contact = ({ contact }) => {
                   <div className="flex items-center mt-2 text-red-400 text-sm">
                     <AlertCircle className="w-4 h-4 mr-1" />
                     {errors.message}
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-3">
+                <div className="relative group">
+                  <Paperclip className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <Input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    onChange={handleFilesChange}
+                    accept={ALLOWED_ATTACHMENT_EXTENSIONS.map((ext) => `.${ext}`).join(',')}
+                    className={`pl-14 pr-4 py-3 h-auto bg-slate-900/50 border-slate-700 text-slate-300 file:text-emerald-300 file:mr-4 rounded-xl hover-glow ${errors.attachments ? 'border-red-400' : ''}`}
+                  />
+                </div>
+                <p className="text-xs text-slate-400">
+                  Puedes adjuntar hasta {MAX_ATTACHMENTS} archivos ({MAX_ATTACHMENT_SIZE_MB}MB cada uno).
+                </p>
+                {errors.attachments && (
+                  <div className="flex items-center text-red-400 text-sm">
+                    <AlertCircle className="w-4 h-4 mr-1" />
+                    {errors.attachments}
+                  </div>
+                )}
+                {attachments.length > 0 && (
+                  <div className="space-y-2">
+                    {attachments.map((file, index) => (
+                      <div key={`${file.name}-${index}`} className="flex items-center justify-between bg-slate-900/60 border border-slate-700 rounded-lg px-3 py-2">
+                        <p className="text-sm text-slate-200 truncate pr-4">
+                          {file.name}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => removeAttachment(index)}
+                          className="text-slate-400 hover:text-red-400 transition-colors"
+                          aria-label={`Quitar ${file.name}`}
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
